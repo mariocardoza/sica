@@ -89,6 +89,24 @@ Swal({
               
                  </ul>
                 </li>
+
+                <li class="ripple">
+                  <a class="tree-toggle nav-header">
+                    <span class="fa fa-users"></span> Paquetes escolares
+                    <span class="fa-angle-right fa right-arrow text-right"></span>
+                  </a>
+                  <ul class="nav nav-list tree">
+                  <li><a href="alimentos.php">Alimentos</a></li>
+                  
+                  <li><a href="recetas.php">Recetas</a></li>
+
+
+                   
+              
+                 </ul>
+                </li>
+
+
                 <li class="active ripple">
                 <?php 
                       if($clausurado==0){

@@ -1,11 +1,30 @@
+<?php
+$id = $_REQUEST["id"];
+include "../config/conexion.php";
+$result = $conexion->query("select u.id as unidadmedida_id,a.fecha_recibido, a.id, a.nombre as alimento,a.estado as estado, u.nombre_unidad FROM alimentos as a inner join unidad_medidas as u on u.id=a.unidadmedida_id WHERE a.estado=1 and a.id=".$id);
+if ($result) {
+    while ($fila = $result->fetch_object()) {
+        $idalimento       = $fila->id;
+        $nombreA   = $fila->alimento;
+        $unidadMedida   = $fila->unidadmedida_id;
+        $estadoA = $fila->estado;
+        $fechaRecibido = $fila->fecha_recibido;
 
+    }
+}
+?>
 <!DOCTYPE html>
+<?php
+//Codigo que muestra solo los errores exceptuando los notice.
+error_reporting(E_ALL & ~E_NOTICE);
+ include '../config/conexion.php';
+                      
+?>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Inicio | SICA</title>
-
+  <title>Alimentos</title>
   <!-- start: Css -->
   <link rel="stylesheet" type="text/css" href="../asset/css/bootstrap.min.css">
 
@@ -19,6 +38,8 @@
   <link rel="stylesheet" type="text/css" href="../asset/css/plugins/ionrangeslider/ion.rangeSlider.skinFlat.css"/>
   <link rel="stylesheet" type="text/css" href="../asset/css/plugins/bootstrap-material-datetimepicker.css"/>
   <link rel="stylesheet" type="text/css" href="../asset/css/sweetalert2.css"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
   <link href="../asset/css/style.css" rel="stylesheet">
   <!-- end: Css -->
 
@@ -29,8 +50,8 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
       <script type="text/javascript">
-
-        function sweet(){
+//SWEET ALERTS
+      function sweetConfirm(){
         swal({
   title: '¿Está seguro que desea continuar?',
   text: "¡No sera posible revertir esta acción!",
@@ -50,21 +71,79 @@
   }
 })
         }
-        
+
+
+        function sweetGuardo(str){
+          swal(
+  'Exito!',
+  ''+str,
+  'success'
+)
+setTimeout(function() {
+  document.location.href='alimentos.php';
+}, 2000);
+
+        }
+function sweetError(str){
+         swal({
+  type: 'error',
+  title: 'Error...',
+  text: ''+str,
+  footer: 'Ha ocurrido un error al registrar la información'
+})
+        }
+
+      //SWEET ALERTS
+      //Validacion Solo letras js
+      function sololetras(e) {
+        key=e.keyCode || e.which;
+ 
+        teclado=String.fromCharCode(key).toLowerCase();
+ 
+        letras="qwertyuiopasdfghjklñzxcvbnm ";
+ 
+        especiales="8-37-38-46-164";
+ 
+        teclado_especial=false;
+ 
+        for(var i in especiales){
+            if(key==especiales[i]){
+                teclado_especial=true;
+                break;
+            }
+        }
+ 
+        if(letras.indexOf(teclado)==-1 && !teclado_especial){
+            return false;
+        }
+    }
+     //Validacion Solo letras
+
+
+        function verificar(){
+          if(document.getElementById('nombrea').value==""){
+            sweetError("Por favor complete los campos.");
+            
+          }else{
+            //alert(document.getElementById("lastindex"));
+            document.getElementById("bandera").value="add";
+            document.e_alimento.submit();
+          }
+
+        }
+       //boton cancelar
+        function cancel(){
+          document.location.href='cmaterias.php';
+        }
       </script>
 </head>
 
-<body id="mimin" class="dashboard-v1">
+<body id="mimin" class="dashboard">
    <?php include "header.php"?>
 
       <div class="container-fluid mimin-wrapper">
-
-          <?php
-          if($tipo==1){
-            include "menu.php";
-          }else{
-            include "menuD.php";
-          } ?>
+          
+          <?php include "menu.php";?>
 
 
           <!-- start: Content -->
@@ -73,19 +152,91 @@
                   <div class="panel-body">
                     <div class="col-md-12" >
 
-                         <h3 class="animated fadeInLeft">Bienvenido a SICA <?php echo $_SESSION["nombre"]; ?></h3>
+                         <h3 class="animated fadeInLeft">Alimento</h3>
                         <p class="animated fadeInDown">
-                         Santa Familia <span class="fa-angle-right fa"></span>La ciencia sin Dios es vana
-                         
+                          Alimento <span class="fa-angle-right fa"></span>Datos del alimento
+                        </p>
                     </div>
                   </div>
                 </div>
-               
-                <div class="form-element" align="center">
+                <div class="form-element">
                 
-                <!--<b><img src="../asset/img/logo.png" style="width:60%;height=100% "></b>-->
-                <b><img src="../asset/img/fondo.png" style="width:35%;height=80% "></b>
-                   
+                <form id="e_alimento" name="e_alimento" action="" method="post">
+                <input type="hidden" name="bandera" id="bandera" value="edit">
+                <input type="hidden" name="baccion" id="baccion" value="<?php echo $idalimento; ?>">
+                <input type="hidden" name="lastindex" id="lastindex" value="<?php echo ".$last." ?>">
+                
+                <div class="col-md-12">
+                  <div class="col-md-12 panel panel-info">
+                    <div class="col-md-12 panel-heading">
+                      <h4>Informaci&oacute;n Alimento</h4>
+                      
+                    </div>
+
+                    <div class="col-md-12 panel-body" style="padding-bottom:30px;">
+                      <div class="col-md-12">
+                        <form class="cmxform" id="formcliente" method="post" action="">
+
+                          <div class="col-md-6">
+                          </br>
+                           </br>
+                        
+                           </br>
+                           </br>
+                           <div class="input-group">
+                           <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
+                           <input id="nombrea" type="text" class="form-control" name="nombrea"  placeholder="Nombre" onkeypress="return sololetras(event)" value="<?php echo $nombreA; ?>">
+                           </div>
+                           </br>
+                           </br>
+
+                           <div class="form-group form-animate-text" style="margin-top:36px !important;margin-bottom:30px !important;">
+                            
+                              <select id="unidadmedida_id"   class="select2 show-tick" style="width: 455px; font-size: 15px" name="unidadmedida_id">
+                              <option value="">Seleccione Unidad</option>
+                               <?php
+                      include '../config/conexion.php';
+                      $result = $conexion->query("select * from unidad_medidas where estado='1'");
+                      if ($result) {
+
+                        while ($fila = $result->fetch_object()) {
+
+                           if ($unidadMedida==$fila->id) {
+                              echo "<option selected value='".$fila->id."'>".$fila->nombre_unidad."</option>";
+                          
+                          } else {
+                              echo "<option value='".$fila->id."'>".$fila->nombre_unidad."</option>";
+                          
+                          }
+  
+                           }
+                      }
+                       ?>
+                              
+                              </select>
+                            
+                            </div>
+                           
+                           </div>
+                           
+                          <div class="col-md-12">
+                            <div class="col-md-3">
+                            </div>
+                              <div class="col-md-3">
+                             
+                              <br><br>
+                               <input type="button" name="next" class="next action-button btn btn-info btn-sm btn-round" style="font-size:20px;" value="Guardar" onclick="verificar();"/>                          </div>
+                          <div class="col-md-3">
+                          <br><br>
+                              <input type="button" name="next" class="next action-button btn btn-danger btn-sm btn-round" style="font-size:20px;" value="Cancelar" onclick="cancel();" />
+                          </div>
+                        </div>
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+                </form>
               </div>
 
               </div>
@@ -98,143 +249,9 @@
       </div>
 
       <!-- start: Mobile -->
-      <div id="mimin-mobile" class="reverse">
-        <div class="mimin-mobile-menu-list">
-            <div class="col-md-12 sub-mimin-mobile-menu-list animated fadeInLeft">
-                <ul class="nav nav-list">
-                    <li class="active ripple">
-                      <a class="tree-toggle nav-header">
-                        <span class="fa-home fa"></span>Dashboard
-                        <span class="fa-angle-right fa right-arrow text-right"></span>
-                      </a>
-                      <ul class="nav nav-list tree">
-                          <li><a href="dashboard-v1.html">Dashboard v.1</a></li>
-                          <li><a href="dashboard-v2.html">Dashboard v.2</a></li>
-                      </ul>
-                    </li>
-                    <li class="ripple">
-                      <a class="tree-toggle nav-header">
-                        <span class="fa-diamond fa"></span>Layout
-                        <span class="fa-angle-right fa right-arrow text-right"></span>
-                      </a>
-                      <ul class="nav nav-list tree">
-                        <li><a href="topnav.html">Top Navigation</a></li>
-                        <li><a href="boxed.html">Boxed</a></li>
-                      </ul>
-                    </li>
-                    <li class="ripple">
-                      <a class="tree-toggle nav-header">
-                        <span class="fa-area-chart fa"></span>Charts
-                        <span class="fa-angle-right fa right-arrow text-right"></span>
-                      </a>
-                      <ul class="nav nav-list tree">
-                        <li><a href="chartjs.html">ChartJs</a></li>
-                        <li><a href="morris.html">Morris</a></li>
-                        <li><a href="flot.html">Flot</a></li>
-                        <li><a href="sparkline.html">SparkLine</a></li>
-                      </ul>
-                    </li>
-                    <li class="ripple">
-                      <a class="tree-toggle nav-header">
-                        <span class="fa fa-pencil-square"></span>Ui Elements
-                        <span class="fa-angle-right fa right-arrow text-right"></span>
-                      </a>
-                      <ul class="nav nav-list tree">
-                        <li><a href="color.html">Color</a></li>
-                        <li><a href="weather.html">Weather</a></li>
-                        <li><a href="typography.html">Typography</a></li>
-                        <li><a href="icons.html">Icons</a></li>
-                        <li><a href="buttons.html">Buttons</a></li>
-                        <li><a href="media.html">Media</a></li>
-                        <li><a href="panels.html">Panels & Tabs</a></li>
-                        <li><a href="notifications.html">Notifications & Tooltip</a></li>
-                        <li><a href="badges.html">Badges & Label</a></li>
-                        <li><a href="progress.html">Progress</a></li>
-                        <li><a href="sliders.html">Sliders</a></li>
-                        <li><a href="timeline.html">Timeline</a></li>
-                        <li><a href="modal.html">Modals</a></li>
-                      </ul>
-                    </li>
-                    <li class="ripple">
-                      <a class="tree-toggle nav-header">
-                       <span class="fa fa-check-square-o"></span>Forms
-                       <span class="fa-angle-right fa right-arrow text-right"></span>
-                      </a>
-                      <ul class="nav nav-list tree">
-                        <li><a href="formelement.html">Form Element</a></li>
-                        <li><a href="#">Wizard</a></li>
-                        <li><a href="#">File Upload</a></li>
-                        <li><a href="#">Text Editor</a></li>
-                      </ul>
-                    </li>
-                    <li class="ripple">
-                      <a class="tree-toggle nav-header">
-                        <span class="fa fa-table"></span>Tables
-                        <span class="fa-angle-right fa right-arrow text-right"></span>
-                      </a>
-                      <ul class="nav nav-list tree">
-                        <li><a href="datatables.html">Data Tables</a></li>
-                        <li><a href="handsontable.html">handsontable</a></li>
-                        <li><a href="tablestatic.html">Static</a></li>
-                      </ul>
-                    </li>
-                    <li class="ripple">
-                      <a href="calendar.html">
-                         <span class="fa fa-calendar-o"></span>Calendar
-                      </a>
-                    </li>
-                    <li class="ripple">
-                      <a class="tree-toggle nav-header">
-                        <span class="fa fa-envelope-o"></span>Mail
-                        <span class="fa-angle-right fa right-arrow text-right"></span>
-                      </a>
-                      <ul class="nav nav-list tree">
-                        <li><a href="mail-box.html">Inbox</a></li>
-                        <li><a href="compose-mail.html">Compose Mail</a></li>
-                        <li><a href="view-mail.html">View Mail</a></li>
-                      </ul>
-                    </li>
-                    <li class="ripple">
-                      <a class="tree-toggle nav-header">
-                        <span class="fa fa-file-code-o"></span>Pages
-                        <span class="fa-angle-right fa right-arrow text-right"></span>
-                      </a>
-                      <ul class="nav nav-list tree">
-                        <li><a href="forgotpass.html">Forgot Password</a></li>
-                        <li><a href="login.html">SignIn</a></li>
-                        <li><a href="reg.html">SignUp</a></li>
-                        <li><a href="article-v1.html">Article v1</a></li>
-                        <li><a href="search-v1.html">Search Result v1</a></li>
-                        <li><a href="productgrid.html">Product Grid</a></li>
-                        <li><a href="profile-v1.html">Profile v1</a></li>
-                        <li><a href="invoice-v1.html">Invoice v1</a></li>
-                      </ul>
-                    </li>
-                     <li class="ripple"><a class="tree-toggle nav-header"><span class="fa "></span> MultiLevel  <span class="fa-angle-right fa right-arrow text-right"></span> </a>
-                      <ul class="nav nav-list tree">
-                        <li><a href="view-mail.html">Level 1</a></li>
-                        <li><a href="view-mail.html">Level 1</a></li>
-                        <li class="ripple">
-                          <a class="sub-tree-toggle nav-header">
-                            <span class="fa fa-envelope-o"></span> Level 1
-                            <span class="fa-angle-right fa right-arrow text-right"></span>
-                          </a>
-                          <ul class="nav nav-list sub-tree">
-                            <li><a href="mail-box.html">Level 2</a></li>
-                            <li><a href="compose-mail.html">Level 2</a></li>
-                            <li><a href="view-mail.html">Level 2</a></li>
-                          </ul>
-                        </li>
-                      </ul>
-                    </li>
-                    <li><a href="credits.html">Credits</a></li>
-                  </ul>
-            </div>
-        </div>
-      </div>
-      <button id="mimin-mobile-menu-opener" class="animated rubberBand btn btn-circle btn-danger">
-        <span class="fa fa-bars"></span>
-      </button>
+        <?php 
+        include "menuMovil.php";
+        ?>
        <!-- end: Mobile -->
 
 <!-- start: Javascript -->
@@ -242,7 +259,6 @@
 <script src="../asset/js/jquery.ui.min.js"></script>
 <script src="../asset/js/bootstrap.min.js"></script>
 <script src="../asset/js/sweetalert2.js"></script>
-
 
 <!-- plugins -->
 <script src="../asset/js/plugins/moment.min.js"></script>
@@ -256,8 +272,12 @@
 <script src="../asset/js/plugins/jquery.validate.min.js"></script>
 
 
+
 <!-- custom -->
 <script src="../asset/js/main.js"></script>
+<script>$(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});</script>
 <script type="text/javascript">
   $(document).ready(function(){
 
@@ -472,23 +492,63 @@
 
 include "../config/conexion.php";
 
-$bandera           = $_REQUEST["bandera"];
-$nombreempleado    = $_REQUEST["nombreempleado"];
-$apellidoempleado  = $_REQUEST["apellidoempleado"];
-$duiempleado       = $_REQUEST["duiempleado"];
-$nitempleado       = $_REQUEST["nitempleado"];
-$cargoempleado     = $_REQUEST["cargoempleado"];
-$idagenciaempleado = $_REQUEST["idagenciaempleado"];
+$bandera  = $_REQUEST["bandera"];
+$baccion  = $_REQUEST["baccion"];
+$alimento  = $_REQUEST["nombrea"];
+$unidadmedida_id       = $_REQUEST["unidadmedida_id"];
 
 if ($bandera == "add") {
-    $consulta  = "INSERT INTO empleado VALUES('null','" . $nombreempleado . "','" . $apellidoempleado . "','" . $duiempleado . "','" . $nitempleado . "','" . $cargoempleado . "','" . $idagenciaempleado . "')";
+    //  Validamos que no exista ese mismo bloque para otra materia.
+  $query = "select id FROM alimentos WHERE id".$baccion."%';";
+  $result = $conexion->query($query);
+  if($result->num_rows == 0){
+  $consulta  = "UPDATE alimentos set nombre='" . $alimento . "',unidadmedida_id='" . $unidadmedida_id . "' where id='" . $baccion . "'";
     $resultado = $conexion->query($consulta);
+    //echo "".$consulta;
     if ($resultado) {
-        msg("Exito");
+        //Bloque para agarrar el ID de la ultima materia ingresada.
+        $result = $conexion->query("select MAX(id) as max from alimentos");
+                      if ($result) {
+
+                        while ($fila = $result->fetch_object()) {
+                          $last=$fila->max;
+                                                 
+                           }
+                      }
+        //Finde bloque.
+        msgAdd("Se actualizo el alimento.");
+        //Query para agregar a la tabla de muchos a muchos.
+        
     } else {
-        msg("No Exito");
+        //echo("Error materia:".mysqli_error($conexion));
     }
-}
+  }else{
+       $mensaje="El horario que desea agregar ya existe. ";
+    msgError($mensaje);
+  }
 
   
+}
+
+function msg($texto)
+{
+    echo "<script type='text/javascript'>";
+    echo "alert('$texto');";
+    //echo "document.location.href='materias.php';";
+    echo "</script>";
+}
+function msgAdd($texto)
+{
+    echo "<script type='text/javascript'>";
+    echo "sweetGuardo('$texto');";
+    //echo "document.location.href='materias.php';";
+    echo "</script>";
+}
+function msgError($texto)
+{
+    echo "<script type='text/javascript'>";
+    echo "sweetError('$texto');";
+    //echo "document.location.href='materias.php';";
+    echo "</script>";
+}
 ?>
