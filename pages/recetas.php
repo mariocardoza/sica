@@ -19,7 +19,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
   <meta name="author" content="Isna Nur Azis">
   <meta name="keyword" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lista Alimentos|SICA</title>
+  <title>Lista Recetas|SICA</title>
 
   <!-- start: Css -->
   <link rel="stylesheet" type="text/css" href="../asset/css/bootstrap.min.css">
@@ -71,7 +71,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
          function sweetConfirm2(id,op){
         swal({
   title: '¿Está seguro que desea continuar?',
-  text: "¡No sera posible revertir esta acción!",
+  text: "¡No será posible revertir esta acción!",
   type: 'warning',
   showCancelButton: true,
   confirmButtonColor: '#3085d6',
@@ -108,7 +108,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
   type: 'error',
   title: 'Error...',
   text: ''+str,
-  footer: 'Revise que todos los campos esten completados.'
+  footer: 'Revise que todos los campos estén completados.'
 })
         }
 
@@ -117,7 +117,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
        function modify(id)
         {
          
-          document.location.href='editalimento.php?id='+id;///////FUNC MODIFICAR ALIMENTO
+          document.location.href='editreceta.php?id='+id;///////FUNC MODIFICAR ALIMENTO
         }
       function confirmar(id,op)
         {
@@ -141,7 +141,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
         function reporte(){
           var cont = "<?php echo $_GET['ide'];?>"; 
        
-          window.open("reporteAlimentosActivos.php?id="+cont, '_blank');
+          window.open("reporteRecetasActivas.php?id="+cont, '_blank');
         }
         function filtrar(){
           ide=document.getElementById("op").value;
@@ -179,9 +179,9 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                <div class="panel box-shadow-none content-header">
                   <div class="panel-body">
                     <div class="col-md-12">
-                        <h3 class="animated fadeInLeft">Listado de Alimentos</h3>
+                        <h3 class="animated fadeInLeft">Listado de Recetas</h3>
                         <p class="animated fadeInDown">
-                          Alimentos <span class="fa-angle-right fa"></span> Complejo Educativo "La Santa Familia"
+                          Recetas <span class="fa-angle-right fa"></span> Complejo Educativo "La Santa Familia"
                         </p>
                     </div>
                   </div>
@@ -207,7 +207,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                                <div class="col-md-4">
                                 <div class="col-md-3">
                                   <br>
-                                  <a href="crearAlimentos.php" class="btn btn-success float-right">Nuevo</a>
+                                  <a href="crearRecetas.php" class="btn btn-success float-right">Nuevo</a>
                                 </div>
                                  
                                </div>
@@ -220,9 +220,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                       <table id="datatables-example" style="font-size:16px" class="table table-striped table-bordered" width="100%" cellspacing="0">
                       <thead>
                         <tr>
-                          <th></th>
-                          <th>Alimento</th>
-                          <th>Unidad de Medida</th>
+                          <th>Nombre</th>
                           <th>Estado</th>
                           <th>Acciones</th>                         
                         </tr>
@@ -232,7 +230,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                       include "../config/conexion.php";
                       if(!isset($_GET['ide'])){
 
-                        $result = $conexion->query("select a.id, a.nombre as alimento,a.estado as estado, u.nombre_unidad FROM alimentos as a inner join unidad_medidas as u on u.id=a.unidadmedida_id");
+                        $result = $conexion->query("select r.id, r.nombre as receta, r.estado as estado FROM recetas as r");
                       }
 
                      
@@ -248,8 +246,8 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                                </button>
                                </div>
                               </td>";
-                             echo "<td>" . $fila->alimento . "</td>";
-                             echo "<td>" . $fila->nombre_unidad  . "</td>";
+                             echo "<td>" . $fila->receta . "</td>";
+
        
                                if ($fila->estado==1) {
                               echo "<td>Activo</td>";
@@ -334,7 +332,7 @@ if ($bandera == "add") {
     }
 }
 if ($bandera == "desactivar") {
-  $consulta = "UPDATE alimentos SET estado = '0' WHERE id = '".$baccion."'";
+  $consulta = "UPDATE recetas SET estado = '0' WHERE id = '".$baccion."'";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
         // msg("Exito");
@@ -343,7 +341,7 @@ if ($bandera == "desactivar") {
     }
 }
 if ($bandera == "activar") {
-  $consulta = "UPDATE alimentos SET estado = '1' WHERE id = '".$baccion."'";
+  $consulta = "UPDATE recetas SET estado = '1' WHERE id = '".$baccion."'";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
         // msg("Exito");
@@ -353,7 +351,7 @@ if ($bandera == "activar") {
 }
 
 if ($bandera == "desaparecer") {
-    $consulta  = "DELETE FROM alimentos where id='" . $baccion . "'";
+    $consulta  = "DELETE FROM recetas where id='" . $baccion . "'";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
         msg("Exito");
