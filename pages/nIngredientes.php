@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <?php
+$elid = $_REQUEST["idreceta"];
 //Codigo que muestra solo los errores exceptuando los notice.
 error_reporting(E_ALL & ~E_NOTICE);
  include '../config/conexion.php';
@@ -36,6 +37,7 @@ error_reporting(E_ALL & ~E_NOTICE);
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
       <script type="text/javascript">
+        var elid = "<?php echo $elid; ?>";
 //SWEET ALERTS
       function sweetConfirm(){
         swal({
@@ -66,7 +68,7 @@ error_reporting(E_ALL & ~E_NOTICE);
   'success'
 )
 setTimeout(function() {
-  document.location.href='alimentos.php';
+  document.location.href='editreceta.php?id='+elid;
 }, 2000);
 
         }

@@ -192,25 +192,10 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                   <div class="panel">
                     <div class="panel-heading col-md-12">
                     
-                         
-
-                                <div class="col-md-8">
-                                  
-
-                                  <a class="btn btn-outline btn-default" >
-                                      <span onclick="reporte();"><i class="fa fa-print fa-lg"></i><br>Reporte </span>
-                                    </a>
-                                    
-                                  
-                               </div>
-
-                               <div class="col-md-4">
-                                <div class="col-md-3">
-                                  <br>
-                                  <a href="crearRecetas.php" class="btn btn-success float-right">Nuevo</a>
-                                </div>
-                                 
-                               </div>
+                         <div class="col-md-3">
+                            <br>
+                            <a href="crearRecetas.php" class="btn btn-success btn-round float-right" style="font-size:20px">Nuevo</a>
+                          </div>
                                                                                     
                                                                                  
                     </div>

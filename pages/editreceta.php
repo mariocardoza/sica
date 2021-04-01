@@ -180,9 +180,10 @@ include '../config/conexion.php';
                     </div>
                   </form>
                 </div>
+
                 <div class="col-md-12" style="margin-top:2em;">
-                  <a href="nIngredientes.php?idreceta=<?php echo $id;?>" class="float-right next action-button btn btn-danger btn-sm btn-round" style="font-size:20px;">Nuevo ingrediente</a>
-                  <br>
+                  <a href="nIngredientes.php?idreceta=<?php echo $id;?>" class="float-right next action-button btn btn-success btn-sm btn-round" style="font-size:16px;">Agregar Ingrediente</a>
+                  <br><br>
                   <table class="table">
                     <thead>
                       <tr>
@@ -207,7 +208,7 @@ include '../config/conexion.php';
                              echo "<td>" . $fila->nombre . "</td>";
                              echo "<td>" . $fila->cantidad . "</td>";
                              echo "<td>" . $fila->nombre_unidad . "</td>";
-                             echo "<td style='text-align:center;'><button align='center' title='Activar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",2);><i class='fa fa-remuve'></i>
+                             echo "<td style='text-align:center;'><button align='center' title='Activar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",1);><i class='fa fa-remove'></i>
                                 </button></td>";
                             echo "</tr>";
                           }
@@ -466,26 +467,26 @@ include "../config/conexion.php";
 
 $bandera  = $_REQUEST["bandera"];
 $baccion  = $_REQUEST["baccion"];
-$alimento  = $_REQUEST["nombrea"];
+$receta  = $_REQUEST["nombrer"];
 $unidadmedida_id       = $_REQUEST["unidadmedida_id"];
 
 if ($bandera == "add") {
     //  Validamos que no exista ese mismo bloque para otra materia.
-  $query = "select id FROM alimentos WHERE id".$baccion."%';";
+  $query = "select id FROM recetas WHERE id".$baccion."%';";
   $result = $conexion->query($query);
   if($result->num_rows == 0){
-    $consulta  = "UPDATE alimentos set nombre='" . $alimento . "',unidadmedida_id='" . $unidadmedida_id . "' where id='" . $baccion . "'";
+    $consulta  = "UPDATE recetas set nombre='" . $receta . "'where id='" . $baccion . "'";
     $resultado = $conexion->query($consulta);
   //echo "".$consulta
     if ($resultado) {
   //Bloque para agarrar el ID de la ultima materia ingresada.
-      $result = $conexion->query("select MAX(id) as max from alimentos");
+      $result = $conexion->query("select MAX(id) as max from recetas");
       if ($result) {
         while ($fila = $result->fetch_object()) {
           $last=$fila->max;
         }
       //Finde bloque.
-      msgAdd("Se actualizo el alimento.");
+      msgAdd("Se actualizó la receta.");
       }
     //Query para agregar a la tabla de muchos a muchos.
     } else {
