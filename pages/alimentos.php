@@ -119,6 +119,11 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
          
           document.location.href='editalimento.php?id='+id;///////FUNC MODIFICAR ALIMENTO
         }
+
+        function addCantidad(id)
+        {
+          document.location.href='agregarcantidad.php?id='+id; //////AGRAGAR MAS CANTIDAD A UN ALIMENTO
+        }
       function confirmar(id,op)
         {
           if (op==1)
@@ -204,7 +209,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                           <th>Alimento</th>
                           <th>Unidad de Medida</th>
                           <th>Estado</th>
-                          <th>Acciones</th>                         
+                          <th colspan="3" style="text-align: center;">Acciones</th>                         
                         </tr>
                       </thead>
                       <tbody>
@@ -243,7 +248,10 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                               echo "<td style='text-align:center;'><button align='center' title='Activar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",2);><i class='fa fa-check'></i>
                                 </button></td>";
                           }
-                           
+
+                          echo "<td style='text-align:center;'><button align='center' title='Ver existencia' type='button' class='btn btn-default' onclick='modify(" .$fila->id. ");'><i class='fa fa-eye'></i></button> </td>";
+
+                          echo "<td style='text-align:center;'><button align='center' title='Agregar Cantidad' type='button' class='btn btn-default' onclick='addCantidad(" .$fila->id. ");'><i class='fa fa-plus'></i></button> </td>";                         
         
                             echo "</tr>";
                           }

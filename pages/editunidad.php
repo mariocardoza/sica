@@ -1,15 +1,13 @@
 <?php
 $id = $_REQUEST["id"];
 include "../config/conexion.php";
-$result = $conexion->query("select u.id as unidadmedida_id,a.fecha_recibido, a.id, a.nombre as alimento,a.estado as estado, u.nombre_unidad FROM alimentos as a inner join unidad_medidas as u on u.id=a.unidadmedida_id WHERE a.estado=1 and a.id=".$id);
+$result = $conexion->query("select u.id, u.nombre_unidad as unidad_medida, u.estado as estado
+FROM unidad_medidas as u WHERE u.estado=1 and u.id=".$id);
 if ($result) {
     while ($fila = $result->fetch_object()) {
-        $idalimento       = $fila->id;
-        $nombreA   = $fila->alimento;
-        $unidadMedida   = $fila->unidadmedida_id;
-        $estadoA = $fila->estado;
-        $fechaRecibido = $fila->fecha_recibido;
-
+        $idmedida       = $fila->id;
+        $nombreU   = $fila->unidad_medida;
+        $estadoU = $fila->estado;
     }
 }
 ?>
@@ -24,7 +22,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Alimentos</title>
+  <title>Unidad de Medida</title>
   <!-- start: Css -->
   <link rel="stylesheet" type="text/css" href="../asset/css/bootstrap.min.css">
 
@@ -65,7 +63,7 @@ error_reporting(E_ALL & ~E_NOTICE);
   if (result.value) {
     swal(
       '¡Exito!',
-      'La accion ha sido completada.',
+      'La acción ha sido completada.',
       'success'
     )
   }
@@ -80,7 +78,7 @@ error_reporting(E_ALL & ~E_NOTICE);
   'success'
 )
 setTimeout(function() {
-  document.location.href='alimentos.php';
+  document.location.href='unidadmedidas.php';
 }, 2000);
 
         }
@@ -121,19 +119,19 @@ function sweetError(str){
 
 
         function verificar(){
-          if(document.getElementById('nombrea').value==""){
+          if(document.getElementById('nombreu').value==""){
             sweetError("Por favor complete los campos.");
             
           }else{
             //alert(document.getElementById("lastindex"));
             document.getElementById("bandera").value="add";
-            document.e_alimento.submit();
+            document.e_unidad.submit();
           }
 
         }
        //boton cancelar
         function cancel(){
-          document.location.href='alimentos.php';
+          document.location.href='unidadmedidas.php';
         }
       </script>
 </head>
@@ -152,24 +150,24 @@ function sweetError(str){
                   <div class="panel-body">
                     <div class="col-md-12" >
 
-                         <h3 class="animated fadeInLeft">Alimento</h3>
+                         <h3 class="animated fadeInLeft">Unidad Medida</h3>
                         <p class="animated fadeInDown">
-                          Alimento <span class="fa-angle-right fa"></span>Datos del alimento
+                          Unidad Medida <span class="fa-angle-right fa"></span>Datos del registro
                         </p>
                     </div>
                   </div>
                 </div>
                 <div class="form-element">
                 
-                <form id="e_alimento" name="e_alimento" action="" method="post">
+                <form id="e_unidad" name="e_unidad" action="" method="post">
                 <input type="hidden" name="bandera" id="bandera" value="edit">
-                <input type="hidden" name="baccion" id="baccion" value="<?php echo $idalimento; ?>">
+                <input type="hidden" name="baccion" id="baccion" value="<?php echo $idmedida; ?>">
                 <input type="hidden" name="lastindex" id="lastindex" value="<?php echo ".$last." ?>">
                 
                 <div class="col-md-12">
                   <div class="col-md-12 panel panel-info">
                     <div class="col-md-12 panel-heading">
-                      <h4>Informaci&oacute;n Alimento</h4>
+                      <h4>Informaci&oacute;n Registro</h4>
                       
                     </div>
 
@@ -185,35 +183,12 @@ function sweetError(str){
                            </br>
                            <div class="input-group">
                            <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
-                           <input id="nombrea" type="text" class="form-control" name="nombrea"  placeholder="Nombre" onkeypress="return sololetras(event)" value="<?php echo $nombreA; ?>">
+                           <input id="nombreu" type="text" class="form-control" name="nombreu"  placeholder="Nombre" onkeypress="return sololetras(event)" value="<?php echo $nombreU; ?>">
                            </div>
                            </br>
                            </br>
 
                            <div class="form-group form-animate-text" style="margin-top:36px !important;margin-bottom:30px !important;">
-                            
-                              <select id="unidadmedida_id"   class="select2 show-tick" style="width: 455px; font-size: 15px" name="unidadmedida_id">
-                              <option value="">Seleccione Unidad</option>
-                               <?php
-                      include '../config/conexion.php';
-                      $result = $conexion->query("select * from unidad_medidas where estado='1'");
-                      if ($result) {
-
-                        while ($fila = $result->fetch_object()) {
-
-                           if ($unidadMedida==$fila->id) {
-                              echo "<option selected value='".$fila->id."'>".$fila->nombre_unidad."</option>";
-                          
-                          } else {
-                              echo "<option value='".$fila->id."'>".$fila->nombre_unidad."</option>";
-                          
-                          }
-  
-                           }
-                      }
-                       ?>
-                              
-                              </select>
                             
                             </div>
                            
@@ -494,20 +469,19 @@ include "../config/conexion.php";
 
 $bandera  = $_REQUEST["bandera"];
 $baccion  = $_REQUEST["baccion"];
-$alimento  = $_REQUEST["nombrea"];
-$unidadmedida_id       = $_REQUEST["unidadmedida_id"];
+$unidad_medida  = $_REQUEST["nombreu"];
 
 if ($bandera == "add") {
     //  Validamos que no exista ese mismo bloque para otra materia.
-  $query = "select id FROM alimentos WHERE id".$baccion."%';";
+  $query = "select id FROM unidad_medidas WHERE id".$baccion."%';";
   $result = $conexion->query($query);
   if($result->num_rows == 0){
-  $consulta  = "UPDATE alimentos set nombre='" . $alimento . "',unidadmedida_id='" . $unidadmedida_id . "' where id='" . $baccion . "'";
+  $consulta  = "UPDATE unidad_medidas set nombre_unidad='" . $unidad_medida . "' where id='" . $baccion . "'";
     $resultado = $conexion->query($consulta);
     //echo "".$consulta;
     if ($resultado) {
         //Bloque para agarrar el ID de la ultima materia ingresada.
-        $result = $conexion->query("select MAX(id) as max from alimentos");
+        $result = $conexion->query("select MAX(id) as max from unidad_medidas");
                       if ($result) {
 
                         while ($fila = $result->fetch_object()) {
@@ -516,7 +490,7 @@ if ($bandera == "add") {
                            }
                       }
         //Finde bloque.
-        msgAdd("Se actualizo el alimento.");
+        msgAdd("Se actualizó el registro.");
         //Query para agregar a la tabla de muchos a muchos.
         
     } else {

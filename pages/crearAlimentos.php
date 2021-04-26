@@ -200,6 +200,11 @@ function sweetError(str){
                               </select>
                             
                             </div>
+
+                            <div class="input-group">
+                           <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
+                           <input id="cantidada" type="number" step="any" class="form-control" name="cantidada"  placeholder="Cantidad">
+                           </div>
                            
                            </div>
                            
@@ -336,15 +341,29 @@ include "../config/conexion.php";
 $bandera  = $_REQUEST["bandera"];
 $alimento  = $_REQUEST["nombrea"];
 $unidadmedida_id       = $_REQUEST["unidadmedida_id"];
+$cantidad       = $_REQUEST["cantidada"];
 $fecha=date("Y-m-d");
+$elid = 0;
 if ($bandera == "add") {
     //  Validamos que no exista ese mismo bloque para otra materia.
   
   $consulta  = "INSERT INTO alimentos (nombre,unidadmedida_id,fecha_recibido) VALUES('" .$alimento. "','" . $unidadmedida_id . "','".$fecha."')";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
-        
-        //Finde bloque.
+      $consulta2  = "SELECT id from alimentos ORDER by ID DESC LIMIT 1";
+      $resultado2 = $conexion->query($consulta2);
+      if($resultado2){
+        while ($fila = $resultado2->fetch_object())
+        {
+          $elid = $fila->id;
+        }
+      }
+
+      if($elid>0)
+      {
+        $consulta3  = "INSERT INTO inventarios (alimento_id,cantidad,tipo,fecha) VALUES('" .$elid. "','" . $cantidad . "',1,'".$fecha."')";
+        $resultado3 = $conexion->query($consulta3);
+      }
         msgAdd("Se registró el alimento.");
         //Query para agregar a la tabla de muchos a muchos.
         

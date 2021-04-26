@@ -100,7 +100,9 @@ Swal({
                   
                   <li><a href="recetas.php">Recetas</a></li>
 
-                  <li><a href="unidadmedidas.php">Unidades de Medida</a></li>                   
+                  <li><a href="unidadmedidas.php">Unidades de Medida</a></li>  
+
+                  <li><a href="kardex.php">Inventarios</a></li>                 
                  </ul>
                 </li>
 

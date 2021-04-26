@@ -1,17 +1,27 @@
 
 <!DOCTYPE html>
 <?php
-$elid = $_REQUEST["idreceta"];
 //Codigo que muestra solo los errores exceptuando los notice.
 error_reporting(E_ALL & ~E_NOTICE);
  include '../config/conexion.php';
+
+ $id= $_REQUEST["id"];
+
+ $result = $conexion->query("select a.id, a.nombre as alimento, u.nombre_unidad FROM alimentos as a inner join unidad_medidas as u on u.id=a.unidadmedida_id WHERE a.id=".$id);
+if ($result) {
+    while ($fila = $result->fetch_object()) {
+        $idalimento       = $fila->id;
+        $nombreA   = $fila->alimento;
+        $unidadMedida   = $fila->nombre_unidad;
+    }
+}
                       
 ?>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ingredientes</title>
+  <title>Cantidad</title>
   <!-- start: Css -->
   <link rel="stylesheet" type="text/css" href="../asset/css/bootstrap.min.css">
 
@@ -37,7 +47,6 @@ error_reporting(E_ALL & ~E_NOTICE);
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
       <script type="text/javascript">
-        var elid = "<?php echo $elid; ?>";
 //SWEET ALERTS
       function sweetConfirm(){
         swal({
@@ -68,7 +77,7 @@ error_reporting(E_ALL & ~E_NOTICE);
   'success'
 )
 setTimeout(function() {
-  document.location.href='editreceta.php?id='+elid;
+  document.location.href='alimentos.php';
 }, 2000);
 
         }
@@ -109,19 +118,19 @@ function sweetError(str){
 
 
         function verificar(){
-          if(document.getElementById('cantidad').value==""){
+          if(document.getElementById('acantidad').value==""){
             sweetError("Por favor complete los campos.");
             
           }else{
             //alert(document.getElementById("lastindex"));
             document.getElementById("bandera").value="add";
-            document.e_alimento.submit();
+            document.e_cantidad.submit();
           }
 
         }
        //boton cancelar
         function cancel(){
-          document.location.href='recetas.php';
+          document.location.href='alimentos.php';
         }
       </script>
 </head>
@@ -140,81 +149,48 @@ function sweetError(str){
                   <div class="panel-body">
                     <div class="col-md-12" >
 
-                         <h3 class="animated fadeInLeft">Ingrediente</h3>
+                         <h3 class="animated fadeInLeft">Cantidad a Agregar</h3>
                         <p class="animated fadeInDown">
-                          Ingrediente <span class="fa-angle-right fa"></span>Detalles del ingrediente
+                          <span class="fa-angle-right fa"></span>Datos del registro
                         </p>
                     </div>
                   </div>
                 </div>
                 <div class="form-element">
                 
-                <form id="e_alimento" name="e_alimento" action="" method="post">
+                <form id="e_cantidad" name="e_cantidad" action="" method="post">
                 <input type="hidden" name="bandera" id="bandera" value="add">
                 
                 
                 <div class="col-md-12">
                   <div class="col-md-12 panel panel-info">
                     <div class="col-md-12 panel-heading">
-                      <h4>Informaci&oacute;n Ingrediente</h4>
+                      <h4>Informaci&oacute;n del registro</h4>
                       
                     </div>
 
                     <div class="col-md-12 panel-body" style="padding-bottom:30px;">
+                      <h2 class="text-center"><?php echo $nombreA; ?></h2>
+                      <h4 class="text-center"><?php echo $unidadMedida; ?></h4>
                       <div class="col-md-12">
-
-                          <div class="col-md-6">
-                          </br>
-                           </br>
-                        
-                           </br>
-                           </br>
-                           <div class="input-group">
-                           <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
-                           <input id="cantidad" type="number" class="form-control" name="cantidad"  placeholder="Cantidad">
-                           </div>
-                           </br>
-                           </br>
-
-                           <div class="form-group form-animate-text" style="margin-top:36px !important;margin-bottom:30px !important;">
-                            
-                              <select id="alimento_id"   class="select2 show-tick" style="width: 455px; font-size: 15px" name="alimento_id">
-                              <option value="">Seleccione alimento</option>
-                               <?php
-                      include '../config/conexion.php';
-                      $result = $conexion->query("select * from alimentos where estado='1'");
-                      if ($result) {
-
-                        while ($fila = $result->fetch_object()) {
-
-                           if ($unidadMedida==$fila->id) {
-                              echo "<option selected value='".$fila->id."'>".$fila->nombre_unidad."</option>";
-                          
-                          } else {
-                              echo "<option value='".$fila->id."'>".$fila->nombre."</option>";
-                          
-                          }
-  
-                           }
-                      }
-                       ?>
-                              
-                              </select>
-                            
-                            </div>
-                           
-                           </div>
-                           
-                          <div class="col-md-12">
-                            <div class="col-md-3">
-                            </div>
-                              <div class="col-md-3">
-                             
-                              <br><br>
-                               <input type="button" name="next" class="next action-button btn btn-info btn-sm btn-round" style="font-size:20px;" value="Guardar" onclick="verificar();"/>                          </div>
-                          <div class="col-md-3">
+                        <div class="col-md-6">
+                          <br>
                           <br><br>
-                              <input type="button" name="next" class="next action-button btn btn-danger btn-sm btn-round" style="font-size:20px;" value="Cancelar" onclick="cancel();" />
+                          <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
+                            <input id="acantidad" type="number" class="form-control" name="acantidad"  placeholder="Cantidad">
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="col-md-3">
+                          </div>
+                          <div class="col-md-3">
+                             
+                            <br><br><br>
+                            <input type="button" name="next" class="next action-button btn btn-info btn-sm btn-round" style="font-size:20px;" value="Guardar" onclick="verificar();"/>                          </div>
+                            <div class="col-md-3">
+                            <br><br><br>
+                            <input type="button" name="next" class="next action-button btn btn-danger btn-sm btn-round" style="font-size:20px;" value="Cancelar" onclick="cancel();" />
                           </div>
                         </div>
 
@@ -335,19 +311,18 @@ function sweetError(str){
 
 include "../config/conexion.php";
 
-$idreceta = $_REQUEST["idreceta"];
 $bandera  = $_REQUEST["bandera"];
-$cantidad  = $_REQUEST["cantidad"];
-$alimento_id       = $_REQUEST["alimento_id"];
+$ingredientes  = $_REQUEST["acantidad"];
+$fecha=date("Y-m-d");
 if ($bandera == "add") {
     //  Validamos que no exista ese mismo bloque para otra materia.
   
-  $consulta  = "INSERT INTO ingredientes (receta_id, alimento_id, cantidad) VALUES('" .$idreceta. "','" . $alimento_id . "','".$cantidad."')";
+  $consulta  = "INSERT INTO inventarios (alimento_id, tipo, fecha, cantidad) VALUES('" .$idalimento. "', '1', '".$fecha."', '".$ingredientes."')";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
         
         //Finde bloque.
-        msgAdd("Se registró el alimento.");
+        msgAdd("Cantidad agregada");
         //Query para agregar a la tabla de muchos a muchos.
         
     } else {

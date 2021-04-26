@@ -46,7 +46,7 @@ include '../config/conexion.php';
       <![endif]-->
       <script type="text/javascript">
       //SWEET ALERTS
-      function sweetConfirm(){
+      function sweetConfirm(id,op){
         swal({
           title: '¿Está seguro que desea continuar?',
           text: "¡No sera posible revertir esta acción!",
@@ -62,7 +62,72 @@ include '../config/conexion.php';
               '¡Exito!',
               'La acción ha sido completada.',
               'success'
-              )
+              );
+            document.getElementById('bandera').value='desactivar';
+            document.getElementById('baccion').value=id;
+            document.turismo.submit();
+          }
+        })
+      }
+
+      function sweetDelete(id){
+        swal({
+          title: '¿Está seguro de eliminar el ingrediente?',
+          text: "¡No sera posible revertir esta acción!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Continuar',
+          cancelButtonText:'Cancelar',
+        }).then((result) => {
+          if (result.value) {
+            swal(
+              '¡Exito!',
+              'La acción ha sido completada.',
+              'success'
+              );
+            /*document.getElementById('bandera2').value='eliminar';
+            document.getElementById('baccion2').value=id;
+            document.ideliminar.submit();*/
+            $.ajax({
+              url: "deleteI.php",
+              type: "POST",
+              dataType: "json",
+              data: {id:id},
+              success: function(response){
+                if(response){
+                  location.reload();
+                }else{
+                  alert(error);
+                }
+              }, error:function(error){
+
+              }
+            });
+          }
+        })
+      }
+      function sweetConfirm2(id,op){
+        swal({
+          title: '¿Está seguro que desea continuar?',
+          text: "¡No será posible revertir esta acción!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Continuar',
+          cancelButtonText:'Cancelar',
+        }).then((result) =>{
+          if(result.value){
+            swal(
+              '¡Exito!',
+              'La accion ha sido completada.',
+              'success'
+            );
+            document.getElementById('bandera').value='activar';
+            document.getElementById('baccion').value=id;
+            document.turismo.submit();
           }
         })
       }
@@ -121,13 +186,36 @@ include '../config/conexion.php';
     }
     //boton cancelar
     function cancel(){
-      document.location.href='cmaterias.php';
+      document.location.href='recetas.php';
+    }
+
+    function confirmar(id,op){
+      alert(id);
+      if(op==1)
+      {
+        if(sweetConfirm(id,op))
+        {
+
+        }
+      }else{
+        if(sweetConfirm2(id,op))
+        {
+
+        }else{
+
+        }
+      }
+    }
+
+    function eliminar(id){
+      sweetDelete(id);
     }
 
 </script>
 </head>
 
 <body id="mimin" class="dashboard">
+  <form id="turismo" name="turismo" action="" method="post"></form>
   <?php include "header.php"; ?>
 
   <div class="container-fluid mimin-wrapper">
@@ -145,6 +233,11 @@ include '../config/conexion.php';
           </div>
         </div>
       </div>
+
+      <form id="ideliminar" method="POST" action="">
+        <input type="hidden" name="bandera2" id="bandera2">
+        <input type="hidden" name="baccion2" id="baccion2">
+      </form>
 
       <div class="form-element">
         <form id="e_receta" name="e_receta" action="" method="post">
@@ -198,7 +291,7 @@ include '../config/conexion.php';
                       include "../config/conexion.php";
                       if(!isset($_GET['ide'])){
 
-                        $result = $conexion->query("select u.nombre_unidad, i.cantidad, a.nombre FROM ingredientes as i inner join alimentos as a on a.id = i.alimento_id INNER JOIN unidad_medidas as u on u.id = a.unidadmedida_id where i.receta_id=".$id);
+                        $result = $conexion->query("select u.nombre_unidad, i.cantidad, a.nombre, i.id FROM ingredientes as i inner join alimentos as a on a.id = i.alimento_id INNER JOIN unidad_medidas as u on u.id = a.unidadmedida_id where i.receta_id=".$id);
                       }
 
                      
@@ -208,7 +301,8 @@ include '../config/conexion.php';
                              echo "<td>" . $fila->nombre . "</td>";
                              echo "<td>" . $fila->cantidad . "</td>";
                              echo "<td>" . $fila->nombre_unidad . "</td>";
-                             echo "<td style='text-align:center;'><button align='center' title='Activar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",1);><i class='fa fa-remove'></i>
+
+                             echo "<td style='text-align:center;'><button align='center' title='Activar' type='button' class='btn btn-default' onclick=eliminar(" . $fila->id . ");><i class='fa fa-remove'></i>
                                 </button></td>";
                             echo "</tr>";
                           }
@@ -466,6 +560,7 @@ include "menuMovil.php";
 include "../config/conexion.php";
 
 $bandera  = $_REQUEST["bandera"];
+$bandera2  = $_REQUEST["bandera2"];
 $baccion  = $_REQUEST["baccion"];
 $receta  = $_REQUEST["nombrer"];
 $unidadmedida_id       = $_REQUEST["unidadmedida_id"];
@@ -485,13 +580,23 @@ if ($bandera == "add") {
         while ($fila = $result->fetch_object()) {
           $last=$fila->max;
         }
-      //Finde bloque.
-      msgAdd("Se actualizó la receta.");
+        //Finde bloque.
+        msgAdd("Se actualizó la receta.");
       }
     //Query para agregar a la tabla de muchos a muchos.
     } else {
   //echo("Error materia:".mysqli_error($conexion));
     }
+  }
+}
+
+if($bandera2 == "eliminar"){
+  $baccion2 = $_REQUEST["baccion2"];
+  $sql= "DELETE FROM ingredientes where id = '".$baccion2."'";
+  $result = $conexion->query($sql);
+  if($result)
+  {
+    msg("Se elimino el ingrediente");
   }
 }
 

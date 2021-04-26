@@ -19,7 +19,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
   <meta name="author" content="Isna Nur Azis">
   <meta name="keyword" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lista Unidades de medida|SICA</title>
+  <title>Lista de Inventario|SICA</title>
 
   <!-- start: Css -->
   <link rel="stylesheet" type="text/css" href="../asset/css/bootstrap.min.css">
@@ -114,31 +114,6 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
 
       //SWEET ALERTS
 
-       function modify(id)
-        {
-         
-          document.location.href='editunidad.php?id='+id;///////FUNC MODIFICAR UNIDAD MEDIDA
-        }
-      function confirmar(id,op)
-        {
-          if (op==1)
-           {
-            if (sweetConfirm(id,op)) 
-            {
-            
-            }
-          }else{
-            if (sweetConfirm2(id,op)) {
-           
-          }else
-            {
-           
-             }
-          }
-
-
-        }
-
         function filtrar(){
           ide=document.getElementById("op").value;
           $("#ide").val(ide);
@@ -175,9 +150,9 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                <div class="panel box-shadow-none content-header">
                   <div class="panel-body">
                     <div class="col-md-12">
-                        <h3 class="animated fadeInLeft">Listado de Unidades de Medida</h3>
+                        <h3 class="animated fadeInLeft">Kardex para: </h3>
                         <p class="animated fadeInDown">
-                          Unidades <span class="fa-angle-right fa"></span> Complejo Educativo "La Santa Familia"
+                          Inventarios <span class="fa-angle-right fa"></span> Complejo Educativo "La Santa Familia"
                         </p>
                     </div>
                   </div>
@@ -187,11 +162,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                 <div class="col-md-12">
                   <div class="panel">
                     <div class="panel-heading col-md-12">
-                    
-                          
-                               <div class="col-md-2">
-                                  <a href="crearUnidades.php" class="btn btn-success btn-round float-right" style="font-size:20px">Nueva</a>
-                               </div>    
+                       
                                                                                  
                     </div>
                     <div class="panel-body">
@@ -200,10 +171,11 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                       <table id="datatables-example" style="font-size:16px" class="table table-striped table-bordered" width="100%" cellspacing="0">
                       <thead>
                         <tr>
-                          <th></th>
-                          <th>Unidad de Medida</th>
-                          <th>Estado</th>
-                          <th>Acciones</th>                         
+                          <th>Fecha</th>
+                          <th>Entradas</th>
+                          <th>Salidas</th>
+                          <th>Total en existencia</th>
+                         
                         </tr>
                       </thead>
                       <tbody>
@@ -211,37 +183,49 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                       include "../config/conexion.php";
                       if(!isset($_GET['ide'])){
 
-                        $result = $conexion->query("select u.id, u.nombre_unidad as unidad_medida, u.estado as estado FROM unidad_medidas as u");
+                        $result = $conexion->query("select * FROM inventarios where alimento_id =".$id);
                       }
 
                      
                       if ($result) {
+                        $existen = 0;
+                        $primero=0;
+                        $siguiente=0;
+                        $i=0;
                           while ($fila = $result->fetch_object()) {
+                            $i++;
+                            if($i==1){
+                              $siguiente=0;
+                            }else{
+                              $siguiente=$fila->cantidad;
+                            }
                             echo "<tr>";
-                              echo "<td>
-                              <div class='col-md-2' style='margin-top:1px'>
-                                <button class='btn ripple-infinite btn-round btn-warning'  onclick='modify(" . $fila->id. ")';>
-                               <div>
-                                 <span>Editar</span>
-                               </div>
-                               </button>
-                               </div>
-                              </td>";
-                             echo "<td>" . $fila->unidad_medida  . "</td>";
+                            
+                             echo "<td>" . $fila->fecha . "</td>";
+
        
-                               if ($fila->estado==1) {
-                              echo "<td>Activo</td>";
-                             
-                             echo "<td style='text-align:center;'><button align='center' title='Desactivar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",1);><i class='fa fa-remove'></i>
-                                 </button></td>";
+                               if ($fila->tipo==1) {
+                              echo "<td>". $fila->cantidad ."</td>";
+                              echo "<td> - </td>";
                            }else
                            {
-                              echo "<td>Inactivo</td>";
-                             
-                              echo "<td style='text-align:center;'><button align='center' title='Activar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",2);><i class='fa fa-check'></i>
-                                </button></td>";
+                              echo "<td> - </td>";
+                              echo "<td>". $fila->cantidad ."</td>";
                           }
-                           
+
+                          if($fila->tipo == 1)
+                          {
+                            
+                              $exi=0;
+                              $exi=$siguient+$fila->cantidad;
+                              echo "<td> ".$exi." </td>";
+                            
+                          }else{
+                            $exi=0;
+                              $exi=$siguiente-$fila->cantidad;
+                              echo "<td> ".$exi." </td>";
+                          }
+                                      
         
                             echo "</tr>";
                           }
@@ -312,7 +296,7 @@ if ($bandera == "add") {
     }
 }
 if ($bandera == "desactivar") {
-  $consulta = "UPDATE unidad_medidas SET estado = '0' WHERE id = '".$baccion."'";
+  $consulta = "UPDATE alimentos SET estado = '0' WHERE id = '".$baccion."'";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
         // msg("Exito");
@@ -321,7 +305,7 @@ if ($bandera == "desactivar") {
     }
 }
 if ($bandera == "activar") {
-  $consulta = "UPDATE unidad_medidas SET estado = '1' WHERE id = '".$baccion."'";
+  $consulta = "UPDATE alimentos SET estado = '1' WHERE id = '".$baccion."'";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
         // msg("Exito");
@@ -331,7 +315,7 @@ if ($bandera == "activar") {
 }
 
 if ($bandera == "desaparecer") {
-    $consulta  = "DELETE FROM unidad_medidas where id='" . $baccion . "'";
+    $consulta  = "DELETE FROM alimentos where id='" . $baccion . "'";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
         msg("Exito");
