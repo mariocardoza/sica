@@ -313,21 +313,34 @@ include "../config/conexion.php";
 
 $bandera  = $_REQUEST["bandera"];
 $ingredientes  = $_REQUEST["acantidad"];
+$eltotal = 0;
 $fecha=date("Y-m-d");
 if ($bandera == "add") {
     //  Validamos que no exista ese mismo bloque para otra materia.
-  
-  $consulta  = "INSERT INTO inventarios (alimento_id, tipo, fecha, cantidad) VALUES('" .$idalimento. "', '1', '".$fecha."', '".$ingredientes."')";
-    $resultado = $conexion->query($consulta);
-    if ($resultado) {
-        
-        //Finde bloque.
-        msgAdd("Cantidad agregada");
-        //Query para agregar a la tabla de muchos a muchos.
-        
-    } else {
-        echo("Error materia:".mysqli_error($conexion));
+  $consulta2  = "SELECT total from inventarios WHERE alimento_id='".$idalimento."' ORDER by ID DESC LIMIT 1";
+  $result = $conexion->query($consulta2);
+  if($result){
+    while ($fila = $result->fetch_object())
+    {
+      $eltotal = $fila->total;
     }
+    if($eltotal>0){
+      $eltotal = $eltotal+$ingredientes;
+       $consulta  = "INSERT INTO inventarios (alimento_id, tipo, fecha, cantidad,total) VALUES('" .$idalimento. "', '1', '".$fecha."', '".$ingredientes."','".$eltotal."')";
+      $resultado = $conexion->query($consulta);
+      if ($resultado) {
+          
+          //Finde bloque.
+          msgAdd("Cantidad agregada");
+          //Query para agregar a la tabla de muchos a muchos.
+          
+      } else {
+          echo("Error materia:".mysqli_error($conexion));
+      }
+    }
+
+  }
+ 
 
   
 }else{ echo "Aqui";}

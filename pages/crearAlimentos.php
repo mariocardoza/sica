@@ -361,7 +361,7 @@ if ($bandera == "add") {
 
       if($elid>0)
       {
-        $consulta3  = "INSERT INTO inventarios (alimento_id,cantidad,tipo,fecha) VALUES('" .$elid. "','" . $cantidad . "',1,'".$fecha."')";
+        $consulta3  = "INSERT INTO inventarios (alimento_id,cantidad,tipo,fecha,total) VALUES('" .$elid. "','" . $cantidad . "',1,'".$fecha."','".$cantidad."')";
         $resultado3 = $conexion->query($consulta3);
       }
         msgAdd("Se registró el alimento.");
