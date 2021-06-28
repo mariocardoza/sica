@@ -119,7 +119,7 @@ function sweetError(str){
         }
        //boton cancelar
         function cancel(){
-          document.location.href='unidadmedidas.php';
+          document.location.href='bodegas.php';
         }
       </script>
 </head>
@@ -165,7 +165,7 @@ function sweetError(str){
                           <br><br>
                           <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
-                            <input id="nombreunidad" type="text" class="form-control" name="nombreunidad"  placeholder="Nombre" onkeypress="return sololetras(event)">
+                            <input id="nombreunidad" type="text" class="form-control" name="nombreunidad"  placeholder="Nombre">
                           </div>
                         </div>
                         <div class="col-md-12">

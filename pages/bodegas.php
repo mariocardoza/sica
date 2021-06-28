@@ -190,7 +190,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                     
                           
                                <div class="col-md-2">
-                                  <a href="crearUnidades.php" class="btn btn-success btn-round float-right" style="font-size:20px">Nueva</a>
+                                  <a href="crearBodega.php" class="btn btn-success btn-round float-right" style="font-size:20px">Nueva</a>
                                </div>    
                                                                                  
                     </div>
