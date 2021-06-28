@@ -211,6 +211,45 @@ include '../config/conexion.php';
       sweetDelete(id);
     }
 
+    function usarReceta(id){
+      swal({
+          title: '¿Está seguro de utilizar esta receta?',
+          text: "¡Esta acción hara cambios en la bodega!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Continuar',
+          cancelButtonText:'Cancelar',
+        }).then((result) => {
+          if (result.value) {
+            swal(
+              '¡Exito!',
+              'La acción ha sido completada.',
+              'success'
+              );
+            /*document.getElementById('bandera2').value='eliminar';
+            document.getElementById('baccion2').value=id;
+            document.ideliminar.submit();*/
+            $.ajax({
+              url: "usarReceta.php",
+              type: "POST",
+              dataType: "json",
+              data: {id:id},
+              success: function(response){
+                if(response[0]==1){
+                  location.reload();
+                }else{
+                  alert(error);
+                }
+              }, error:function(error){
+
+              }
+            });
+          }
+        });
+    }
+
 </script>
 </head>
 
@@ -277,7 +316,7 @@ include '../config/conexion.php';
                 <div class="col-md-12" style="margin-top:2em;">
                   <a href="nIngredientes.php?idreceta=<?php echo $id;?>" class="float-right next action-button btn btn-success btn-sm btn-round" style="font-size:16px;">Agregar Ingrediente</a>
 
-                  <a href="usarReceta.php?idreceta=<?php echo $id; ?>" class="float-left next action-button btn btn-success btn-sm btn-round" style="font-size: 16px;">Usar Receta</a>
+                  <a onclick="usarReceta(<?php echo $id; ?>)" href="javascript:void(0);" class="float-left next action-button btn btn-success btn-sm btn-round" style="font-size: 16px;">Usar Receta</a>
 
                   <br><br>
                   <table class="table">

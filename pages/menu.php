@@ -102,7 +102,7 @@ Swal({
 
                   <li><a href="unidadmedidas.php">Unidades de Medida</a></li>  
 
-                  <li><a href="kardex.php">Inventarios</a></li>                 
+                  <li><a href="bodegas.php">Bodegas</a></li>                 
                  </ul>
                 </li>
 

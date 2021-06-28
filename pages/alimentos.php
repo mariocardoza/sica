@@ -124,6 +124,10 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
         {
           document.location.href='agregarcantidad.php?id='+id; //////AGRAGAR MAS CANTIDAD A UN ALIMENTO
         }
+        function kardex(id)
+        {
+          document.location.href='kardex.php?id='+id; //////ver kardex
+        }
       function confirmar(id,op)
         {
           if (op==1)
@@ -208,8 +212,9 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                           <th></th>
                           <th>Alimento</th>
                           <th>Unidad de Medida</th>
+                          <th>Bodega</th>
                           <th>Estado</th>
-                          <th colspan="3" style="text-align: center;">Acciones</th>                         
+                          <th style="text-align: center;">Acciones</th>                         
                         </tr>
                       </thead>
                       <tbody>
@@ -217,7 +222,7 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                       include "../config/conexion.php";
                       if(!isset($_GET['ide'])){
 
-                        $result = $conexion->query("select a.id, a.nombre as alimento,a.estado as estado, u.nombre_unidad FROM alimentos as a inner join unidad_medidas as u on u.id=a.unidadmedida_id");
+                        $result = $conexion->query("select a.id, a.nombre as alimento,a.estado as estado, u.nombre_unidad,b.nombre FROM alimentos as a inner join unidad_medidas as u on u.id=a.unidadmedida_id LEFT JOIN bodegas as b on b.id=a.bodega_id");
                       }
 
                      
@@ -235,23 +240,31 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                               </td>";
                              echo "<td>" . $fila->alimento . "</td>";
                              echo "<td>" . $fila->nombre_unidad  . "</td>";
+                             echo "<td>" . $fila->nombre  . "</td>";
        
                                if ($fila->estado==1) {
                               echo "<td>Activo</td>";
+                              }else{
+                                echo "<td>Inactivo</td>";
+                              }
+                            echo "<td style='text-align:center;'>
+                            <div class='btn-group'>";
+                            if($fila->estado==1){
                              
-                             echo "<td style='text-align:center;'><button align='center' title='Desactivar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",1);><i class='fa fa-remove'></i>
-                                 </button></td>";
+                             echo "<button align='center' title='Desactivar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",1);><i class='fa fa-remove'></i>
+                                 </button>";
+                            echo "<button align='center' title='Ver existencia' type='button' class='btn btn-default' onclick='kardex(" .$fila->id. ");'><i class='fa fa-eye'></i></button> ";
+
+                            echo "<button align='center' title='Agregar Cantidad' type='button' class='btn btn-default' onclick='addCantidad(" .$fila->id. ");'><i class='fa fa-plus'></i></button>";  
                            }else
                            {
-                              echo "<td>Inactivo</td>";
+                              
                              
-                              echo "<td style='text-align:center;'><button align='center' title='Activar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",2);><i class='fa fa-check'></i>
-                                </button></td>";
+                              echo "<button align='center' title='Activar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",2);><i class='fa fa-check'></i>
+                                </button>";
                           }
-
-                          echo "<td style='text-align:center;'><button align='center' title='Ver existencia' type='button' class='btn btn-default' onclick='modify(" .$fila->id. ");'><i class='fa fa-eye'></i></button> </td>";
-
-                          echo "<td style='text-align:center;'><button align='center' title='Agregar Cantidad' type='button' class='btn btn-default' onclick='addCantidad(" .$fila->id. ");'><i class='fa fa-plus'></i></button> </td>";                         
+                          echo "</div></td>";
+                                                 
         
                             echo "</tr>";
                           }

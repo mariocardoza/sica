@@ -2,18 +2,10 @@
 //Codigo que muestra solo los errores exceptuando los notice.
 error_reporting(E_ALL & ~E_NOTICE);
 session_start();
-include "../config/conexion.php";
 if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
   $nombre=$_SESSION["usuario"];
   $tipo  =$_SESSION["tipo"];
   $id  = $_REQUEST["id"];
-$alimento="";
-  $result = $conexion->query("select nombre from alimentos WHERE id=".$id);
-if ($result) {
-    while ($fila = $result->fetch_object()) {
-        $alimento   = $fila->nombre;
-    }
-}
 }else {
   header("Location:inicio.php");
 }
@@ -27,7 +19,7 @@ if ($result) {
   <meta name="author" content="Isna Nur Azis">
   <meta name="keyword" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lista de Inventario|SICA</title>
+  <title>Lista Bodegas|SICA</title>
 
   <!-- start: Css -->
   <link rel="stylesheet" type="text/css" href="../asset/css/bootstrap.min.css">
@@ -122,6 +114,31 @@ if ($result) {
 
       //SWEET ALERTS
 
+       function modify(id)
+        {
+         
+          document.location.href='editbodega.php?id='+id;///////FUNC MODIFICAR UNIDAD MEDIDA
+        }
+      function confirmar(id,op)
+        {
+          if (op==1)
+           {
+            if (sweetConfirm(id,op)) 
+            {
+            
+            }
+          }else{
+            if (sweetConfirm2(id,op)) {
+           
+          }else
+            {
+           
+             }
+          }
+
+
+        }
+
         function filtrar(){
           ide=document.getElementById("op").value;
           $("#ide").val(ide);
@@ -158,9 +175,9 @@ if ($result) {
                <div class="panel box-shadow-none content-header">
                   <div class="panel-body">
                     <div class="col-md-12">
-                        <h3 class="animated fadeInLeft">Kardex para: <b> <?php echo $alimento; ?></b></h3>
+                        <h3 class="animated fadeInLeft">Listado de bodegas</h3>
                         <p class="animated fadeInDown">
-                          Inventarios <span class="fa-angle-right fa"></span> Complejo Educativo "La Santa Familia"
+                          Bodegas <span class="fa-angle-right fa"></span> Complejo Educativo "La Santa Familia"
                         </p>
                     </div>
                   </div>
@@ -170,7 +187,11 @@ if ($result) {
                 <div class="col-md-12">
                   <div class="panel">
                     <div class="panel-heading col-md-12">
-                       
+                    
+                          
+                               <div class="col-md-2">
+                                  <a href="crearUnidades.php" class="btn btn-success btn-round float-right" style="font-size:20px">Nueva</a>
+                               </div>    
                                                                                  
                     </div>
                     <div class="panel-body">
@@ -179,11 +200,10 @@ if ($result) {
                       <table id="datatables-example" style="font-size:16px" class="table table-striped table-bordered" width="100%" cellspacing="0">
                       <thead>
                         <tr>
-                          <th>Fecha</th>
-                          <th>Entradas</th>
-                          <th>Salidas</th>
-                          <th>Total en existencia</th>
-                          <th>Ubicación</th>
+                          <th></th>
+                          <th>Nombre</th>
+                          <th>Estado</th>
+                          <th>Acciones</th>                         
                         </tr>
                       </thead>
                       <tbody>
@@ -191,39 +211,38 @@ if ($result) {
                       include "../config/conexion.php";
                       if(!isset($_GET['ide'])){
 
-                        $result = $conexion->query("select i.*, b.nombre as bodega FROM inventarios as i inner join alimentos as a ON a.id=i.alimento_id left join bodegas as b on b.id=a.bodega_id where i.alimento_id =".$id);
+                        $result = $conexion->query("select u.id, u.nombre as nombre, u.estado as estado FROM bodegas as u");
                       }
 
                      
                       if ($result) {
-                        $existen = 0;
-                        $primero=0;
-                        $siguiente=0;
-                        $i=0;
                           while ($fila = $result->fetch_object()) {
-                            $i++;
-                            if($i==1){
-                              $siguiente=0;
-                            }else{
-                              $siguiente=$fila->cantidad;
-                            }
                             echo "<tr>";
-                            
-                             echo "<td>" . $fila->fecha . "</td>";
-
+                              echo "<td>
+                              <div class='col-md-2' style='margin-top:1px'>
+                                <button class='btn ripple-infinite btn-round btn-warning'  onclick='modify(" . $fila->id. ")';>
+                               <div>
+                                 <span>Editar</span>
+                               </div>
+                               </button>
+                               </div>
+                              </td>";
+                             echo "<td>" . $fila->nombre  . "</td>";
        
-                               if ($fila->tipo==1) {
-                              echo "<td>". $fila->cantidad ."</td>";
-                              echo "<td> - </td>";
+                               if ($fila->estado==1) {
+                              echo "<td>Activo</td>";
+                             
+                             echo "<td style='text-align:center;'><button align='center' title='Desactivar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",1);><i class='fa fa-remove'></i>
+                                 </button></td>";
                            }else
                            {
-                              echo "<td> - </td>";
-                              echo "<td>". $fila->cantidad ."</td>";
+                              echo "<td>Inactivo</td>";
+                             
+                              echo "<td style='text-align:center;'><button align='center' title='Activar' type='button' class='btn btn-default' onclick=confirmar(" . $fila->id . ",2);><i class='fa fa-check'></i>
+                                </button></td>";
                           }
-
-                              echo "<td>". $fila->total ."</td>";
-                              echo "<td>". $fila->bodega ."</td>";
-
+                           
+        
                             echo "</tr>";
                           }
                        }
@@ -293,7 +312,7 @@ if ($bandera == "add") {
     }
 }
 if ($bandera == "desactivar") {
-  $consulta = "UPDATE alimentos SET estado = '0' WHERE id = '".$baccion."'";
+  $consulta = "UPDATE bodegas SET estado = '0' WHERE id = '".$baccion."'";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
         // msg("Exito");
@@ -302,7 +321,7 @@ if ($bandera == "desactivar") {
     }
 }
 if ($bandera == "activar") {
-  $consulta = "UPDATE alimentos SET estado = '1' WHERE id = '".$baccion."'";
+  $consulta = "UPDATE bodegas SET estado = '1' WHERE id = '".$baccion."'";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
         // msg("Exito");
@@ -312,7 +331,7 @@ if ($bandera == "activar") {
 }
 
 if ($bandera == "desaparecer") {
-    $consulta  = "DELETE FROM alimentos where id='" . $baccion . "'";
+    $consulta  = "DELETE FROM bodegas where id='" . $baccion . "'";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
         msg("Exito");

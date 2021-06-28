@@ -7,6 +7,7 @@ if ($result) {
         $idalimento       = $fila->id;
         $nombreA   = $fila->alimento;
         $unidadMedida   = $fila->unidadmedida_id;
+        $bodega   = $fila->bodega_id;
         $estadoA = $fila->estado;
         $fechaRecibido = $fila->fecha_recibido;
 
@@ -187,8 +188,7 @@ function sweetError(str){
                            <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
                            <input id="nombrea" type="text" class="form-control" name="nombrea"  placeholder="Nombre" onkeypress="return sololetras(event)" value="<?php echo $nombreA; ?>">
                            </div>
-                           </br>
-                           </br>
+                      
 
                            <div class="form-group form-animate-text" style="margin-top:36px !important;margin-bottom:30px !important;">
                             
@@ -217,7 +217,32 @@ function sweetError(str){
                             
                             </div>
                            
-                           </div>
+                           <div class="form-group form-animate-text" style="margin-top:36px !important;margin-bottom:30px !important;">
+                            
+                              <select id="bodega_id"   class="select2 show-tick" style="width: 455px; font-size: 15px" name="bodega_id">
+                              <option value="">Seleccione bodega</option>
+                               <?php
+                      include '../config/conexion.php';
+                      $result = $conexion->query("select * from bodegas where estado='1'");
+                      if ($result) {
+
+                        while ($fila = $result->fetch_object()) {
+
+                           if ($bodega_id==$fila->id) {
+                              echo "<option selected value='".$fila->id."'>".$fila->nombre."</option>";
+                          
+                          } else {
+                              echo "<option value='".$fila->id."'>".$fila->nombre."</option>";
+                          
+                          }
+  
+                           }
+                      }
+                       ?>
+                              
+                              </select>
+                            
+                            </div>
                            
                           <div class="col-md-12">
                             <div class="col-md-3">
@@ -496,13 +521,14 @@ $bandera  = $_REQUEST["bandera"];
 $baccion  = $_REQUEST["baccion"];
 $alimento  = $_REQUEST["nombrea"];
 $unidadmedida_id       = $_REQUEST["unidadmedida_id"];
+$bodega_id       = $_REQUEST["bodega_id"];
 
 if ($bandera == "add") {
     //  Validamos que no exista ese mismo bloque para otra materia.
   $query = "select id FROM alimentos WHERE id".$baccion."%';";
   $result = $conexion->query($query);
   if($result->num_rows == 0){
-  $consulta  = "UPDATE alimentos set nombre='" . $alimento . "',unidadmedida_id='" . $unidadmedida_id . "' where id='" . $baccion . "'";
+  $consulta  = "UPDATE alimentos set nombre='" . $alimento . "',unidadmedida_id='" . $unidadmedida_id . "',bodega_id='".$bodega_id."' where id='" . $baccion . "'";
     $resultado = $conexion->query($consulta);
     //echo "".$consulta;
     if ($resultado) {

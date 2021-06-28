@@ -10,7 +10,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Alimentos</title>
+  <title>Bodegas</title>
   <!-- start: Css -->
   <link rel="stylesheet" type="text/css" href="../asset/css/bootstrap.min.css">
 
@@ -66,7 +66,7 @@ error_reporting(E_ALL & ~E_NOTICE);
   'success'
 )
 setTimeout(function() {
-  document.location.href='alimentos.php';
+  document.location.href='bodegas.php';
 }, 2000);
 
         }
@@ -107,19 +107,19 @@ function sweetError(str){
 
 
         function verificar(){
-          if(document.getElementById('nombrea').value==""){
+          if(document.getElementById('nombreunidad').value==""){
             sweetError("Por favor complete los campos.");
             
           }else{
             //alert(document.getElementById("lastindex"));
             document.getElementById("bandera").value="add";
-            document.e_alimento.submit();
+            document.e_unidad.submit();
           }
 
         }
        //boton cancelar
         function cancel(){
-          document.location.href='alimentos.php';
+          document.location.href='unidadmedidas.php';
         }
       </script>
 </head>
@@ -138,111 +138,46 @@ function sweetError(str){
                   <div class="panel-body">
                     <div class="col-md-12" >
 
-                         <h3 class="animated fadeInLeft">Alimento</h3>
+                         <h3 class="animated fadeInLeft">Bodegas</h3>
                         <p class="animated fadeInDown">
-                          Alimento <span class="fa-angle-right fa"></span>Datos del alimento
+                          Bodegas <span class="fa-angle-right fa"></span>Datos del registro
                         </p>
                     </div>
                   </div>
                 </div>
                 <div class="form-element">
                 
-                <form id="e_alimento" name="e_alimento" action="" method="post">
+                <form id="e_unidad" name="e_unidad" action="" method="post">
                 <input type="hidden" name="bandera" id="bandera" value="add">
                 
                 
                 <div class="col-md-12">
                   <div class="col-md-12 panel panel-info">
                     <div class="col-md-12 panel-heading">
-                      <h4>Informaci&oacute;n Alimento</h4>
+                      <h4>Informaci&oacute;n del registro</h4>
                       
                     </div>
 
                     <div class="col-md-12 panel-body" style="padding-bottom:30px;">
                       <div class="col-md-12">
-
-                          <div class="col-md-6">
-                          </br>
-                           </br>
-                        
-                           </br>
-                           </br>
-                           <div class="input-group">
-                           <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
-                           <input id="nombrea" type="text" class="form-control" name="nombrea"  placeholder="Nombre" onkeypress="return sololetras(event)">
-                           </div>
-                           </br>
-                           </br>
-
-                           <div class="form-group form-animate-text" style="margin-top:36px !important;margin-bottom:30px !important;">
-                            
-                              <select id="unidadmedida_id"   class="select2 show-tick" style="width: 455px; font-size: 15px" name="unidadmedida_id">
-                              <option value="">Seleccione Unidad</option>
-                               <?php
-                      include '../config/conexion.php';
-                      $result = $conexion->query("select * from unidad_medidas where estado='1'");
-                      if ($result) {
-
-                        while ($fila = $result->fetch_object()) {
-
-                           if ($unidadMedida==$fila->id) {
-                              echo "<option selected value='".$fila->id."'>".$fila->nombre_unidad."</option>";
-                          
-                          } else {
-                              echo "<option value='".$fila->id."'>".$fila->nombre_unidad."</option>";
-                          
-                          }
-  
-                           }
-                      }
-                       ?>
-                              
-                              </select>
-                            
-                            </div>
-                            <div class="form-group form-animate-text" style="margin-top:36px !important;margin-bottom:30px !important;">
-                            
-                              <select id="bodega_id"   class="select2 show-tick" style="width: 455px; font-size: 15px" name="bodega_id">
-                              <option value="">Seleccione bodega</option>
-                               <?php
-                      include '../config/conexion.php';
-                      $result = $conexion->query("select * from bodegas where estado='1'");
-                      if ($result) {
-
-                        while ($fila = $result->fetch_object()) {
-
-                           if ($unidadMedida==$fila->id) {
-                              echo "<option selected value='".$fila->id."'>".$fila->nombre."</option>";
-                          
-                          } else {
-                              echo "<option value='".$fila->id."'>".$fila->nombre."</option>";
-                          
-                          }
-  
-                           }
-                      }
-                       ?>
-                              
-                              </select>
-                            
-                            </div>
-                            <div class="input-group">
-                           <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
-                           <input id="cantidada" type="number" step="any" class="form-control" name="cantidada"  placeholder="Cantidad">
-                           </div>
-                           
-                           </div>
-                           
-                          <div class="col-md-12">
-                            <div class="col-md-3">
-                            </div>
-                              <div class="col-md-3">
-                             
-                              <br><br>
-                               <input type="button" name="next" class="next action-button btn btn-info btn-sm btn-round" style="font-size:20px;" value="Guardar" onclick="verificar();"/>                          </div>
-                          <div class="col-md-3">
+                        <div class="col-md-6">
+                          <br>
                           <br><br>
-                              <input type="button" name="next" class="next action-button btn btn-danger btn-sm btn-round" style="font-size:20px;" value="Cancelar" onclick="cancel();" />
+                          <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
+                            <input id="nombreunidad" type="text" class="form-control" name="nombreunidad"  placeholder="Nombre" onkeypress="return sololetras(event)">
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="col-md-3">
+                          </div>
+                          <div class="col-md-3">
+                             
+                            <br><br><br>
+                            <input type="button" name="next" class="next action-button btn btn-info btn-sm btn-round" style="font-size:20px;" value="Guardar" onclick="verificar();"/>                          </div>
+                            <div class="col-md-3">
+                            <br><br><br>
+                            <input type="button" name="next" class="next action-button btn btn-danger btn-sm btn-round" style="font-size:20px;" value="Cancelar" onclick="cancel();" />
                           </div>
                         </div>
 
@@ -364,34 +299,17 @@ function sweetError(str){
 include "../config/conexion.php";
 
 $bandera  = $_REQUEST["bandera"];
-$alimento  = $_REQUEST["nombrea"];
-$unidadmedida_id       = $_REQUEST["unidadmedida_id"];
-$bodega_id       = $_REQUEST["bodega_id"];
-$cantidad       = $_REQUEST["cantidada"];
+$unidad_medida  = $_REQUEST["nombreunidad"];
 $fecha=date("Y-m-d");
-$fechainventario=date("Y-m-d H:i:s");
-$elid = 0;
 if ($bandera == "add") {
     //  Validamos que no exista ese mismo bloque para otra materia.
   
-  $consulta  = "INSERT INTO alimentos (nombre,unidadmedida_id,bodega_id,fecha_recibido) VALUES('" .$alimento. "','" . $unidadmedida_id . "','".$bodega_id."','".$fecha."')";
+  $consulta  = "INSERT INTO bodegas (nombre) VALUES('" .$unidad_medida. "')";
     $resultado = $conexion->query($consulta);
     if ($resultado) {
-      $consulta2  = "SELECT id from alimentos ORDER by ID DESC LIMIT 1";
-      $resultado2 = $conexion->query($consulta2);
-      if($resultado2){
-        while ($fila = $resultado2->fetch_object())
-        {
-          $elid = $fila->id;
-        }
-      }
-
-      if($elid>0)
-      {
-        $consulta3  = "INSERT INTO inventarios (alimento_id,cantidad,tipo,fecha,total) VALUES('" .$elid. "','" . $cantidad . "',1,'".$fechainventario."','".$cantidad."')";
-        $resultado3 = $conexion->query($consulta3);
-      }
-        msgAdd("Se registró el alimento.");
+        
+        //Finde bloque.
+        msgAdd("Bodega registrada");
         //Query para agregar a la tabla de muchos a muchos.
         
     } else {

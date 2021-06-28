@@ -314,7 +314,7 @@ include "../config/conexion.php";
 $bandera  = $_REQUEST["bandera"];
 $ingredientes  = $_REQUEST["acantidad"];
 $eltotal = 0;
-$fecha=date("Y-m-d");
+$fecha=date("Y-m-d H:i:s");
 if ($bandera == "add") {
     //  Validamos que no exista ese mismo bloque para otra materia.
   $consulta2  = "SELECT total from inventarios WHERE alimento_id='".$idalimento."' ORDER by ID DESC LIMIT 1";
