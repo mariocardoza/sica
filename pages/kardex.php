@@ -213,20 +213,8 @@ if($_SESSION["logueado"] == TRUE && $_SESSION["tipo"]==1) {
                               echo "<td>". $fila->cantidad ."</td>";
                           }
 
-                          if($fila->tipo == 1)
-                          {
-                            
-                              $exi=0;
-                              $exi=$siguient+$fila->cantidad;
-                              echo "<td> ".$exi." </td>";
-                            
-                          }else{
-                            $exi=0;
-                              $exi=$siguiente-$fila->cantidad;
-                              echo "<td> ".$exi." </td>";
-                          }
-                                      
-        
+                              echo "<td>". $fila->total ."</td>";
+
                             echo "</tr>";
                           }
                        }

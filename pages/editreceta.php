@@ -276,6 +276,9 @@ include '../config/conexion.php';
 
                 <div class="col-md-12" style="margin-top:2em;">
                   <a href="nIngredientes.php?idreceta=<?php echo $id;?>" class="float-right next action-button btn btn-success btn-sm btn-round" style="font-size:16px;">Agregar Ingrediente</a>
+
+                  <a href="usarReceta.php?idreceta=<?php echo $id; ?>" class="float-left next action-button btn btn-success btn-sm btn-round" style="font-size: 16px;">Usar Receta</a>
+
                   <br><br>
                   <table class="table">
                     <thead>
